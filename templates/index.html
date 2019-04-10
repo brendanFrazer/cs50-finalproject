@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    INDEX
+{% endblock %}
+
+{% block main %}
+
+    <!-- outWORK! -->
+<div class="container border-secondary">
+    <div class="card-deck text-center">
+        <div class="card mb-2 shadow-md bg-shade">
+            <div class="card-header">
+                <span class="text-white h2">Your </span>
+                <span class="text-white font-italic h4">out</span><span class="text-darkpurple font-weight-bold h2">WORK </span>
+                <span class="text-white h2">Routines</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container border-secondary">
+    <div class="card-deck text-center">
+        <div class="card mb-2 shadow-md bg-shade">
+            {% if routine_flag %}
+            <div class="card-header">
+                <div class="text-white font-weight-light">Previous session values shown</div>
+            </div>
+
+                {% for routine in routines %}
+                <div class="card-header">
+                    <button class="btn btn-darkpurple w-50 text-truncate" type="button" data-toggle="collapse" data-target="#collapse-routine-{{ routine.routine_id }}" aria-expanded="false" aria-controls="collapse-routine-{{ routine.routine_id }}">
+                        <small>{{ routine.routine_name }}</small>
+                    </button>
+                    <div class="collapse" id="collapse-routine-{{ routine.routine_id }}">
+                        {% if routine.has_exercises == 0 %}
+                            <div class="card-body">
+                                <h4 class="text-white">No exercises in routine!</h4>
+                                <a class="btn btn-darkpurple mt-3" href="/manage_exercises">Add exercises!</a>
+                            </div>
+                        {% elif routine.has_exercises == 1 %}
+                            {% for routine_with_exercises in routines_with_exercises %}
+                                {% if routine_with_exercises.routine_id == routine.routine_id %}
+                                    {% for exercise in exercises %}
+                                        {% if exercise.routine_id == routine.routine_id %}
+                                            <div class="card-body">
+                                                <button class="btn-white btn w-50 mx-auto text-truncate" type="button" data-toggle="collapse" data-target="#collapse{{ exercise.exercise_id }}" aria-expanded="false" aria-controls="collapse{{ exercise.exercise_id }}">
+                                                    <small>{{ exercise.exercise_name }}</small>
+                                                </button>
+                                                <div class="collapse" id="collapse{{ exercise.exercise_id }}">
+                                                    <form action="/log_exercise" method="post" id="{{ exercise.exercise_id }}-log_exercise">
+
+                                                        <div class="form-group">
+
+                                                            <input class="form-control" type="hidden" id="routine_id" name="routine_id" value="{{ routine.routine_id }}">
+                                                            <input class="form-control" type="hidden" id="exercise_name" name="exercise_name" value="{{ exercise.exercise_name }}">
+
+                                                            <div class="form-row justify-content-center mt-3">
+                                                                <div class="input-group col-3">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">
+                                                                            Sets:
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" class="form-control text-center" id="{{ exercise.exercise_name |replace(" ", "_") }}{{ routine.routine_id }}sets" name="sets">
+                                                                </div>
+
+                                                                <div class="input-group col-3">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">
+                                                                            Reps:
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" class="form-control text-center" id="{{ exercise.exercise_name |replace(" ", "_") }}{{ routine.routine_id }}reps" name="reps">
+                                                                </div>
+
+                                                                <div class="input-group col-4">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text">
+                                                                            Weight:
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" class="form-control text-center" id="{{ exercise.exercise_name |replace(" ", "_") }}{{ routine.routine_id }}weight" name="weight">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-row justify-content-center mt-3">
+                                                                <div class="input-group">
+                                                                    <button form="{{ exercise.exercise_id}}-log_exercise" class="btn btn-darkpurple btn-outline-primary mx-auto" type="submit">
+                                                                        Log Exercise!
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="card-body">
+                    <h4 class="text-white">No routines created!</h4>
+                    <a class="btn btn-darkpurple mt-3" href="/manage_routines">Create a routine!</a>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="card-body">
+                <h4 class="text-white">No routines created!</h4>
+                <a class="btn btn-darkpurple mt-3" href="/manage_routines">Create a routine!</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onpageshow = function() {
+
+        let routine_ids = document.querySelectorAll('#routine_id');
+        let exercise_names = document.querySelectorAll('#exercise_name');
+
+        var i;
+        for (i = 0; i < routine_ids.length; i++) {
+            let routine_id = routine_ids[i].value;
+            let exercise_name = exercise_names[i].value;
+
+            $.get("/get_prev_values?routine_id=" + routine_id + "&exercise_name=" + exercise_name, function(result) {
+                let formatted_ex_name = exercise_name.replace(/ /g, "_");
+
+                document.querySelector('#' + formatted_ex_name + routine_id + 'sets').placeholder = result.prev_sets;
+                document.querySelector('#' + formatted_ex_name + routine_id + 'reps').placeholder = result.prev_reps;
+                document.querySelector('#' + formatted_ex_name + routine_id + 'weight').placeholder = result.prev_weight;
+            });
+        }
+    };
+
+
+    $('form').on('submit', function () {
+        let form_id = this.id;
+        let sets = document.forms[form_id]["sets"].value;
+        let reps = document.forms[form_id]["reps"].value;
+        let weight = document.forms[form_id]["weight"].value;
+
+        if (sets == "") {
+            event.preventDefault();
+            alert("Please input your sets!\nReminder: Your previous workout's results are display placeholders only!");
+        }
+        else if (reps == "") {
+            event.preventDefault();
+            alert("Please input your reps!\nReminder: Your previous workout's results are display placeholders only!");
+        }
+        else if (weight == "") {
+            event.preventDefault();
+            alert("Please input your weight!\nReminder: Your previous workout's results are display placeholders only!")
+        }
+    });
+
+</script>
+
+{% endblock %}

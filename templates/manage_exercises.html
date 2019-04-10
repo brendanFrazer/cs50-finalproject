@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    MANAGE EXERCISES
+{% endblock %}
+
+{% block main %}
+
+<div class="container border-secondary w-75">
+    <div class="card mb-2 shadow-sm bg-shade">
+        <div class="h2 text-white">Manage Your Exercises</div>
+    </div>
+</div>
+
+<div class="container border-secondary w-75">
+    <div class="card-deck text-center">
+        <div class="card mb-2 shadow-sm bg-shade">
+            <div class="card-header">
+                <h4 class="text-white">Add Exercise to Routine</h4>
+            </div>
+            <div class="card-body">
+
+                <form action="/add_exercise" method="post" id="add_exercise_form">
+                    <div class="form-group">
+                        <div class="form-row justify-content-center">
+                            <div class="input-group mb-2 col-7">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><small>Routine:</small></div>
+                                </div>
+                                <select type="text" class="form-control" id="routine_name" name="routine_name">
+                                    <option selected disabled>Select routine...</option>
+                                    {% for routine in routines %}
+                                    <option>{{ routine.routine_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row justify-content-center">
+                            <div class="input-group mb-2 col-7">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><small>Exercise:</small></div>
+                                </div>
+                                <input type="text" class="form-control" id="exercise_name" name="exercise_name" placeholder="Enter exercise name...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-darkpurple mt-1" type="submit" form="add_exercise_form">Add Exercise</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+        <!-- REMOVE EXERCISE -->
+    <div class="card-deck text-center">
+        <div class="card mb-2 shadow-sm bg-shade">
+
+            <div class="card-header">
+                <h4 class="text-white">Remove Exercise from Routine</h4>
+            </div>
+
+            <div class="card-body">
+                {% for routine in routines %}
+                <form action="/remove_exercise" id="remove_exercise_form_{{ routine.routine_id }}" method="post">
+                    <div class="form-row justify-content-center mb-2">
+                        <div class="input-group col-8">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><small>{{ routine.routine_name }}:</small></div>
+                                <input type="hidden" id="routine_id" name="routine_id" value="{{ routine.routine_id }}">
+                            </div>
+                            <select type="text" class="form-control" id="exercise_name" name="exercise_name">
+                                <option selected disabled small>Select exercise...</option>
+                                {% for exercise in exercises %}
+                                    {% if routine.routine_id == exercise.routine_id %}
+                                    <option>{{ exercise.exercise_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="btn btn-darkpurple col-3" form="remove_exercise_form_{{ routine.routine_id }}" type="submit">Remove Exercise</button>
+                    </div>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('form').on('submit', function () {
+
+        let form_id = this.id;
+
+        if (form_id.includes("add_exercise_form")) {
+            let routine_name = document.forms[form_id]["routine_name"].value;
+            let exercise_name = document.forms[form_id]["exercise_name"].value;
+
+            if (routine_name == "" || routine_name == "Select routine...") {
+                event.preventDefault();
+                alert("Please input a valid routine");
+            }
+            else if (exercise_name == "" || exercise_name == "Enter exercise name...") {
+                event.preventDefault();
+                alert("Please input a valid exercise");
+            }
+        }
+        else if (form_id.includes("remove_exercise_form")) {
+            let exercise_name = document.forms[form_id]["exercise_name"].value;
+
+            if (exercise_name == "" || exercise_name == "Select exercise...") {
+                event.preventDefault();
+                alert("Please input a valid exercise");
+            }
+        }
+    });
+</script>
+
+{% endblock %}

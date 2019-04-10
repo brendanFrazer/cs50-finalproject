@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    MANAGE ROUTINES
+{% endblock %}
+
+{% block main %}
+<div class="container border-secondary w-75">
+    <div class="card mb-2 shadow-sm bg-shade">
+        <div class="h2 text-white">Manage Your Routines</div>
+    </div>
+</div>
+<div class="container border-secondary w-75">
+    <div class="card-deck text-center">
+        <div class="card mb-2 shadow-sm bg-shade">
+            <div class="card-header">
+                <h4 class="text-white">Create Routine</h4>
+            </div>
+            <div class="card-body">
+                <form action="/create_routine" method="post" id="create_routine_form">
+                <div class="form-group">
+                    <label class="text-white" for="routine_name">Name your Routine!</label>
+                    <input autofocus type="text" class="form-control col-sm-6 mx-auto" id="routine_name" name="routine_name" placeholder="Routine Name">
+                </div>
+                <button class="btn btn-darkpurple" type="submit">Create Routine</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck mb-1 text-center">
+        <div class="card mb-2 shadow-sm bg-shade">
+            <div class="card-header">
+                <h4 class="text-white">Delete Routine</h4>
+            </div>
+            <div class="card-body">
+                <form action="/delete_routine" method="post" id="delete_routine_form">
+                <div class="form-group form-row">
+                    <select type="text" class="form-control col-6 mx-auto" id="routine_name" name="routine_name">
+                        <option selected disabled small>Select routine...</option>
+                        {% for routine in routines %}
+                            <option>{{ routine.routine_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-darkpurple" type="submit">Delete Routine</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+
+    $('form').on('submit', function () {
+        let form_id = this.id;
+
+        let routine_name = document.forms[form_id]["routine_name"].value;
+
+        if (routine_name == "" || routine_name == "Select routine...") {
+            event.preventDefault();
+            alert("Please input a valid name");
+        }
+    });
+
+</script>
+
+{% endblock %}

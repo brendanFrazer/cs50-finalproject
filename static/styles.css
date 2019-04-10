@@ -1,0 +1,101 @@
+nav .navbar-brand {
+    font-size: x-large;
+}
+
+nav .navbar-brand .dark-purple {
+    color: #5D3954;
+}
+
+nav .navbar-brand .white {
+    color: white;
+}
+
+.bg-shade {
+    background-color: #AA98A9;
+}
+
+.bg-primary {
+    background-color: #5D3954;
+}
+
+.bg-secondary {
+    background-color: white;
+}
+
+.bg-darkpurple {
+    background-color: #5D3954;
+}
+
+.btn-shade {
+    background-color: #AA98A9;
+}
+
+.btn-darkpurple {
+    background-color: #5D3954;
+}
+
+.btn-darkpurple:hover {
+    color: white;
+    background-color: #AA98A9;
+    border-color: white;
+}
+
+.btn-darkpurple:active {
+    color: #5D3954;
+    background-color: #AA98A9;
+    border-color: white;
+}
+
+.btn-darkpurple:focus {
+    color: white;
+    background-color: #AA98A9;
+    border-color: white;
+}
+
+.btn {
+    color: white;
+    border-color: white;
+}
+
+.btn-white {
+    background-color: white;
+    border-color: #5D3954;
+    color: #5D3954;
+}
+
+.font-primary {
+    color: #5D3954;
+}
+
+.font-secondary {
+    color: white;
+}
+
+.btn-anchor:hover, .btn-anchor:active, .btn-anchor:link, .btn-anchor:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.text-darkpurple {
+    color: #5D3954;
+}
+
+.text-lightpurple {
+    color: #AA98A9;
+}
+
+tbody tr:hover{background-color: rgba(170, 152, 169, 0.55);}
+
+tbody {
+    background-color: white;
+}
+
+thead{
+    background-color: #5D3954;
+}
+
+main {
+    overflow-x: auto;
+    text-align: center;
+}
+

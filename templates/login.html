@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    LOGIN
+{% endblock %}
+
+{% block main %}
+  <div class="container border-secondary w-75">
+    <div class="card-deck mb-2 text-center">
+      <div class="card mb-4 shadow-sm bg-shade">
+        <div class="card-header">
+          <div class="my-0 h2 text-white">Please enter your username and password</div>
+        </div>
+        <div class="card-body">
+          <form action="/login" method="post" id="login">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control form-secondary" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password">
+            </div>
+            <button class="btn btn-lg btn-darkpurple" type="submit">Log In</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+    $('form').on('submit', function () {
+        let form_id = this.id;
+
+        let username = document.forms[form_id]["username"].value;
+        let password = document.forms[form_id]["password"].value;
+
+        if (username == "") {
+            event.preventDefault();
+            alert("Please input a username");
+        }
+        else if (password == "") {
+          event.preventDefault();
+          alert("Please input a password");
+        }
+    });
+
+</script>
+{% endblock %}

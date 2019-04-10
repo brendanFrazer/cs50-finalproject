@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ERROR
+{% endblock %}
+
+{% block main %}
+
+    <!-- http://getbootstrap.com/docs/4.1/components/alerts/ -->
+    <div class="alert alert-danger text-center w-50 div-centered" role="alert">
+        <style>
+            .div-centered {margin: 0 auto;}
+        </style>
+        <h4 class="alert-heading">Error</h4>
+        <p>{{ message }}</p>
+    </div>
+
+{% endblock %}

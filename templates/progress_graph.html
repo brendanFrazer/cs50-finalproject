@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    PROGRESS GRAPH
+{% endblock %}
+
+{% block main %}
+<div class="container border-secondary w-75">
+    <div class="card mb-2 shadow-sm bg-shade">
+        <div class="h2 text-white">View Your Progress</div>
+    </div>
+</div>
+
+    <div class="container border-secondary w-75">
+        <div class="card-deck text-center">
+            <div class="card mb-2 shadow-sm bg-shade">
+                <div class="card-header">
+                    <span class="h4 text-white">Select Exercise to View</span>
+                </div>
+                <div class="card-body">
+                    <form action="/progress_graph" method="post" id="progress_graph_form">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <select type="text" class="form-control col-7 mx-auto" id="exercise_name" name="exercise_name">
+                                    <option selected disabled small>Select exercise...</option>
+                                    {% for exercise in exercises %}
+                                        <option>{{ exercise.exercise_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-darkpurple" form="progress_graph_form" type="submit">View Progress</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if display_graph %}
+        <div class="card-deck text-center">
+            <div class="card mb-2 shadow-sm bg-shade">
+                <div class="card-header">
+                    <span class="h4 text-white">Progress Graph</span>
+                </div>
+                <div class="card-body">
+                    <embed src="./static/progress_graph.pdf" type="application/pdf" width="100%" height="600px" />
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+<script>
+    $('form').on('submit', function () {
+        let form_id = this.id;
+
+        let exercise_name = document.forms[form_id]["exercise_name"].value;
+
+        if (exercise_name == "" || exercise_name == "Select exercise...") {
+            event.preventDefault();
+            alert("Please select a valid exercise");
+        }
+    });
+</script>
+
+{% endblock %}

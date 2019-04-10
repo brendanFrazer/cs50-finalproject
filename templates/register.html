@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    REGISTER
+{% endblock %}
+
+{% block main %}
+  <div class="container border-secondary w-75">
+    <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 shadow-sm bg-shade">
+        <div class="card-header">
+          <div class="h2 text-white">Please select a username and password</div>
+        </div>
+        <div class="card-body">
+          <form action="/register" method="post" id="register">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text" id="username">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="password" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="confirmation" name="confirmation" placeholder="Confirm Password" type="password">
+            </div>
+            <button class="btn btn-lg btn-darkpurple btn-outline-primary" type="submit">Log In</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      let username = document.getElementById('username');
+      let password = document.getElementById('password');
+      let confirmation = document.getElementById('confirmation');
+
+      document.querySelector('form').onsubmit = function() {
+          event.preventDefault();
+
+          if (username.value == "") {
+            event.preventDefault();
+            alert("Please input a username");
+          }
+          else if (password.value == "") {
+            event.preventDefault();
+            alert("Please input a password");
+          }
+          else if (confirmation.value == "") {
+            event.preventDefault();
+            alert("Please confirm your password");
+          }
+          else if (password.value != confirmation.value) {
+            event.preventDefault();
+            alert("Passwords do not match")
+          }
+          else {
+            $.get("/check?username=" + username.value, function(result) {
+                if (result) {
+                    document.querySelector('form').submit();
+                }
+                else {
+                    alert("Username unavailable!");
+                }
+            });
+          }
+      };
+  </script>
+
+{% endblock %}
